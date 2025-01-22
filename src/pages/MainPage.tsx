@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Chat from "./../components/chat/Chat";
 import { MessageBot, Message } from "./../components/message/message";
@@ -7,21 +7,44 @@ import "./../components/chat/Chat.css";
 import "./../App.css";
 import { Link } from "react-router-dom";
 
+interface MessageType {
+    type: "bot" | "user";
+    text: string | JSX.Element;
+}
+
 const MainPage: React.FC = () => {
-    const [text, setText] = useState<string>(""); 
-    const [result, setResult] = useState<React.ReactNode>(""); 
+    const [text, setText] = useState<string>("");
+    const [messages, setMessages] = useState<MessageType[]>([]);
 
-    const handleSubmit = async (e: React.FormEvent, texto: string): Promise<void> => {
-        e.preventDefault(); 
+    useEffect(() => {
+        const initialMessages: MessageType[] = [
+            {
+                type: "bot",
+                text: "Olá! Eu sou um bot que classifica notícias como falsas ou verdadeiras. Por usar modelos de inteligência artificial, minhas informações não são 100% corretas. Não tome minhas respostas como verdade absoluta!",
+            },
+            {
+                type: "bot",
+                text: "Para obter melhores respostas, prefira usar mensagens sem ponto de interrogação. Por exemplo, ao invés de utilizar 'o céu é azul?' use 'o céu é azul', que o nosso modelo consegue entender melhor! Também estamos limitados a questões relacionadas a política, então perguntas fora do tema não há como garantir uma resposta adequada do modelo.",
+            },
+        ];
 
-        setResult(""); 
-        setText(texto); 
+        setMessages(initialMessages); 
+    }, []);
+
+    const handleSubmit = async (e: React.FormEvent, texto: string) => {
+        e.preventDefault();
+        setText(texto);
+
+        if (!texto.trim()) return; 
+
+        const userMessage: MessageType = { type: "user", text: texto };
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
 
         try {
-            const response = await axios.post<{ result: number }>("http://localhost:3001/classify", { text: texto });
+            const response = await axios.post("http://localhost:3001/classify", { text: texto });
             const prediction = response.data.result;
 
-            const message: React.ReactNode =
+            const message: JSX.Element =
                 prediction === 1 ? (
                     <p className="prediction">
                         A notícia enviada foi identificada como falsa pelo nosso modelo. No entanto, isso não significa que
@@ -67,27 +90,26 @@ const MainPage: React.FC = () => {
                     </p>
                 );
 
-            setResult(message); 
+            setMessages((prevMessages) => [...prevMessages, { type: "bot", text: message }]);
         } catch (err) {
             console.error("Erro no React:", err);
-            setResult(<p className="prediction">Ocorreu um erro ao tentar classificar a notícia.</p>);
+            setMessages((prevMessages) => [
+                ...prevMessages,
+                { type: "bot", text: "Ocorreu um erro ao tentar classificar a notícia. Tente novamente mais tarde." },
+            ]);
         }
     };
 
     return (
         <div className="container">
             <Chat>
-                <MessageBot 
-                        text={
-                            <>
-                                Olá! Eu sou um bot que classifica notícias como falsas ou verdadeiras. Por usar modelos de inteligência artificial, minhas informações não são 100% corretas. Não tome minhas respostas como verdade absoluta! 
-                                Para mais informações clique em <Link to="/saiba-mais">Saiba Mais</Link>.
-                            </>
-                        } 
-                    />
-                <MessageBot text="Para obter melhores respostas, prefira usar mensagens sem ponto de interrogação. Por exemplo, ao invés de utilizar 'o céu é azul?' use 'o céu é azul', que o nosso modelo consegue entender melhor! Também estamos limitados a questões relacionadas a política, então perguntas fora do tema não há como garantir uma resposta adequada do modelo. " />
-                {text && <Message text={text} />}
-                {result && <MessageBot text={result as string} />}
+                {messages.map((message, index) => {
+                    return message.type === "bot" ? (
+                        <MessageBot key={index} text={message.text} />
+                    ) : (
+                        <Message key={index} text={message.text} />
+                    );
+                })}
                 <Bottom handleSubmit={handleSubmit} />
             </Chat>
         </div>
