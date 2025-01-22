@@ -20,7 +20,12 @@ const MainPage: React.FC = () => {
         const initialMessages: MessageType[] = [
             {
                 type: "bot",
-                text: "Olá! Eu sou um bot que classifica notícias como falsas ou verdadeiras. Por usar modelos de inteligência artificial, minhas informações não são 100% corretas. Não tome minhas respostas como verdade absoluta!",
+                text: (
+                    <>
+                        Olá! Eu sou um bot que classifica notícias como falsas ou verdadeiras. Por usar modelos de inteligência artificial, minhas informações não são 100% corretas. Não tome minhas respostas como verdade absoluta! Para mais informações, acesse nossa página de{" "}
+                        <Link to="/saiba-mais">Saiba Mais</Link>.
+                    </>
+                ),
             },
             {
                 type: "bot",
