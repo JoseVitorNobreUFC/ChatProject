@@ -98,12 +98,18 @@
   }
 
   .bottom {
-    padding: 20px;
+    padding: 10px 20px 20px 20px;
     display: flex;
     gap: 20px;
     margin-top: auto;
     border-top: 1px solid #dddddd35;
     width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgb(240, 231, 231);
+    border-radius: 10px;
 
     .icons {
       display: flex;
