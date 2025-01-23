@@ -15,6 +15,7 @@ interface MessageType {
 const MainPage: React.FC = () => {
     const [text, setText] = useState<string>("");
     const [messages, setMessages] = useState<MessageType[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const initialMessages: MessageType[] = [
@@ -40,10 +41,15 @@ const MainPage: React.FC = () => {
         e.preventDefault();
         setText(texto);
 
-        if (!texto.trim()) return; 
+        if (!texto.trim() || isLoading) return;
+
+        setIsLoading(true);
 
         const userMessage: MessageType = { type: "user", text: texto };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+        const loadingMessage: MessageType = { type: "bot", text: "Analisando..." };
+        setMessages((prevMessages) => [...prevMessages, loadingMessage]);
 
         try {
             const response = await axios.post("http://localhost:3001/classify", { text: texto });
@@ -95,13 +101,16 @@ const MainPage: React.FC = () => {
                     </p>
                 );
 
-            setMessages((prevMessages) => [...prevMessages, { type: "bot", text: message }]);
+            setMessages((prevMessages) => [ ...prevMessages.slice(0, -1), { type: "bot", text: message }]);
         } catch (err) {
             console.error("Erro no React:", err);
             setMessages((prevMessages) => [
-                ...prevMessages,
+                ...prevMessages.slice(0, -1),
                 { type: "bot", text: "Ocorreu um erro ao tentar classificar a notícia. Tente novamente mais tarde." },
             ]);
+        } finally {
+            console.log(messages)
+            setIsLoading(false);
         }
     };
 
@@ -115,7 +124,7 @@ const MainPage: React.FC = () => {
                         <Message key={index} text={message.text} />
                     );
                 })}
-                <Bottom handleSubmit={handleSubmit} />
+                <Bottom handleSubmit={handleSubmit} isLoading={isLoading} />
             </Chat>
         </div>
     );

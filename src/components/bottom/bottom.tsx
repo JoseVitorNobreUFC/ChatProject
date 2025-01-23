@@ -2,9 +2,10 @@ import React, { useState } from "react";
 
 interface BottomProps {
     handleSubmit: (e: React.FormEvent, text: string) => void;
+    isLoading: boolean;
 }
 
-export const Bottom: React.FC<BottomProps> = ({ handleSubmit }) => {
+export const Bottom: React.FC<BottomProps> = ({ handleSubmit, isLoading }) => {
     const [text, setText] = useState<string>("");
 
     return (
@@ -16,27 +17,29 @@ export const Bottom: React.FC<BottomProps> = ({ handleSubmit }) => {
                         setText("");
                     }}
                 >
-                    <label>
-                        Insira a notícia:
-                    </label>
-                        <textarea
-                            id="text"
-                            name="text"
-                            value={text}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter" && !e.shiftKey) {
-                                    e.preventDefault();
-                                    handleSubmit(e, text);
-                                    setText("");
-                                }
-                            }}
-                            className="chatInput"
-                            onChange={(e) => setText(e.target.value)}
-                        />
-                    
+                    <label>Insira a notícia:</label>
+                    <textarea
+                        id="text"
+                        name="text"
+                        value={text}
+                        disabled={isLoading}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSubmit(e, text);
+                                setText("");
+                            }
+                        }}
+                        className="chatInput"
+                        onChange={(e) => setText(e.target.value)}
+                    />
                     <br />
-                    <button type="submit" className="sendButton">
-                        Enviar
+                    <button type="submit" className="sendButton" disabled={isLoading}
+                        style={{
+                            backgroundColor: isLoading ? "#cccccc" : "#5183fe",
+                            cursor: isLoading ? "not-allowed" : "pointer",
+                        }} >
+                        {isLoading ? "Carregando..." : "Enviar"}
                     </button>
                 </form>
             </div>
