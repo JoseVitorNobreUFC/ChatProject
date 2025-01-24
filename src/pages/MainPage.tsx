@@ -37,26 +37,39 @@ const MainPage: React.FC = () => {
         setMessages(initialMessages); 
     }, []);
 
-    const handleTypingEffect = (fullMessage: JSX.Element) => {
-        const textContent = (fullMessage as any).props.children || "";
-        const typingSpeed = 50; // Velocidade da digitação em ms
-        let currentText = "";
-
-        return new Promise<void>((resolve) => {
-            const interval = setInterval(() => {
-                if (currentText.length < textContent.length) {
-                    currentText += textContent[currentText.length];
-                    setMessages((prevMessages) => [
-                        ...prevMessages.slice(0, -1),
-                        { type: "bot", text: <>{currentText}</> },
-                    ]);
-                } else {
-                    clearInterval(interval);
-                    resolve();
-                }
-            }, typingSpeed);
-        });
+    const handleTypingEffect = async (fullMessage: JSX.Element | string) => {
+        const addMessagePart = (partialText: JSX.Element | string) => {
+            setMessages((prevMessages) => {
+                const updatedMessages = [...prevMessages];
+                updatedMessages[updatedMessages.length - 1] = { type: "bot", text: partialText };
+                return updatedMessages;
+            });
+        };
+    
+        const isJSX = React.isValidElement(fullMessage);
+        if (typeof fullMessage === "string" || !isJSX) {
+            // Para strings simples
+            const text = typeof fullMessage === "string" ? fullMessage : "";
+            let displayedText = "";
+            for (let i = 0; i < text.length; i++) {
+                displayedText += text[i];
+                addMessagePart(displayedText);
+                await new Promise((resolve) => setTimeout(resolve, 30)); // Intervalo entre caracteres
+            }
+        } else if (isJSX) {
+            // Para JSX.Element
+            const jsxParts = (fullMessage as JSX.Element).props.children;
+            let displayedJSX: (string | JSX.Element)[] = [];
+    
+            for (let i = 0; i < jsxParts.length; i++) {
+                displayedJSX.push(jsxParts[i]);
+                addMessagePart(<>{displayedJSX}</>);
+                await new Promise((resolve) => setTimeout(resolve, 100)); // Intervalo entre partes de JSX
+            }
+        }
     };
+    
+    
 
     const handleSubmit = async (e: React.FormEvent, texto: string) => {
         e.preventDefault();
@@ -78,48 +91,48 @@ const MainPage: React.FC = () => {
 
             const message: JSX.Element =
                 prediction === 1 ? (
-                    <p className="prediction">
+                    <>
                         A notícia enviada foi identificada como falsa pelo nosso modelo. No entanto, isso não significa que
-                        ela de fato é falsa. Sempre verifique suas informações em agências de checagem de fatos confiáveis, como{" "}
+                        ela de fato é falsa. Sempre verifique suas informações em agências de checagem de fatos confiáveis, como {" "}
                         <a href="https://www.aosfatos.org/" target="_blank" rel="noopener noreferrer">
                             Agência aos Fatos
-                        </a>,{" "}
+                        </a>, {" "}
                         <a href="https://lupa.uol.com.br/" target="_blank" rel="noopener noreferrer">
                             Agência Lupa
-                        </a>, e até mesmo nos grandes jornais como{" "}
+                        </a>, e até mesmo nos grandes jornais como {" "}
                         <a href="https://www.opovo.com.br/" target="_blank" rel="noopener noreferrer">
                             O Povo
-                        </a>,{" "}
+                        </a>, {" "}
                         <a href="https://www.folha.uol.com.br/" target="_blank" rel="noopener noreferrer">
                             Folha de São Paulo
-                        </a>, e{" "}
+                        </a>, e {" "}
                         <a href="https://oglobo.globo.com/" target="_blank" rel="noopener noreferrer">
                             O Globo
-                        </a>{" "}
+                        </a> {" "}
                         para confirmar se sua notícia é mesmo falsa.
-                    </p>
+                    </>
                 ) : (
-                    <p className="prediction">
+                    <>
                         A notícia enviada pode ser verdadeira, nosso modelo não apontou como falsa. No entanto, isso não
                         significa que ela de fato é verdadeira. Sempre verifique suas informações em agências de checagem
-                        de fatos confiáveis, como{" "}
+                        de fatos confiáveis, como {" "}
                         <a href="https://www.aosfatos.org/" target="_blank" rel="noopener noreferrer">
                             Agência aos Fatos
-                        </a>,{" "}
+                        </a>, {" "}
                         <a href="https://lupa.uol.com.br/" target="_blank" rel="noopener noreferrer">
                             Agência Lupa
-                        </a>, e até mesmo nos grandes jornais como{" "}
+                        </a>, e até mesmo nos grandes jornais como {" "}
                         <a href="https://www.opovo.com.br/" target="_blank" rel="noopener noreferrer">
                             O Povo
-                        </a>,{" "}
+                        </a>, {" "}
                         <a href="https://www.folha.uol.com.br/" target="_blank" rel="noopener noreferrer">
                             Folha de São Paulo
-                        </a>, e{" "}
+                        </a>, e {" "}
                         <a href="https://oglobo.globo.com/" target="_blank" rel="noopener noreferrer">
                             O Globo
-                        </a>{" "}
+                        </a> {" "}
                         para confirmar se sua notícia é mesmo verdadeira.
-                    </p>
+                    </>
                 );
 
             await handleTypingEffect(message);
