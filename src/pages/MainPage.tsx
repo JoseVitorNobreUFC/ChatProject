@@ -59,13 +59,42 @@ const MainPage: React.FC = () => {
         } else if (isJSX) {
             // Para JSX.Element
             const jsxParts = (fullMessage as JSX.Element).props.children;
-            let displayedJSX: (string | JSX.Element)[] = [];
+            let displayedJSX: JSX.Element[] = [];
     
             for (let i = 0; i < jsxParts.length; i++) {
-                displayedJSX.push(jsxParts[i]);
-                addMessagePart(<>{displayedJSX}</>);
-                await new Promise((resolve) => setTimeout(resolve, 100)); // Intervalo entre partes de JSX
+                if (typeof jsxParts[i] === "string") {
+                    for (let j = 0; j < jsxParts[i].length; j++) {
+                        displayedJSX.push(jsxParts[i][j]);
+                        addMessagePart(<>{displayedJSX}</>);
+                        await new Promise((resolve) => setTimeout(resolve, 30));
+                    }
+                } else {
+                    const { children, href } = jsxParts[i].props;
+                    let linkText = "";
+            
+                    for (let j = 0; j < children.length; j++) {
+                        linkText += children[j];
+                        addMessagePart(
+                            <>
+                                {displayedJSX}
+                                <a href={href} target="_blank" rel="noopener noreferrer">
+                                    {linkText}
+                                </a>
+                            </>
+                        );
+                        await new Promise((resolve) => setTimeout(resolve, 30));
+                    }
+            
+                    displayedJSX.push(
+                        <a href={href} target="_blank" rel="noopener noreferrer">
+                            {linkText}
+                        </a>
+                    );
+                }
             }
+            
+            console.log(displayedJSX)
+            
         }
     };
     
