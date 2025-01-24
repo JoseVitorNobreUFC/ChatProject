@@ -37,6 +37,27 @@ const MainPage: React.FC = () => {
         setMessages(initialMessages); 
     }, []);
 
+    const handleTypingEffect = (fullMessage: JSX.Element) => {
+        const textContent = (fullMessage as any).props.children || "";
+        const typingSpeed = 50; // Velocidade da digitação em ms
+        let currentText = "";
+
+        return new Promise<void>((resolve) => {
+            const interval = setInterval(() => {
+                if (currentText.length < textContent.length) {
+                    currentText += textContent[currentText.length];
+                    setMessages((prevMessages) => [
+                        ...prevMessages.slice(0, -1),
+                        { type: "bot", text: <>{currentText}</> },
+                    ]);
+                } else {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, typingSpeed);
+        });
+    };
+
     const handleSubmit = async (e: React.FormEvent, texto: string) => {
         e.preventDefault();
         setText(texto);
@@ -48,7 +69,7 @@ const MainPage: React.FC = () => {
         const userMessage: MessageType = { type: "user", text: texto };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-        const loadingMessage: MessageType = { type: "bot", text: "Analisando..." };
+        const loadingMessage: MessageType = { type: "bot", text: <div className="loader"></div> };
         setMessages((prevMessages) => [...prevMessages, loadingMessage]);
 
         try {
@@ -101,13 +122,10 @@ const MainPage: React.FC = () => {
                     </p>
                 );
 
-            setMessages((prevMessages) => [ ...prevMessages.slice(0, -1), { type: "bot", text: message }]);
+            await handleTypingEffect(message);
         } catch (err) {
             console.error("Erro no React:", err);
-            setMessages((prevMessages) => [
-                ...prevMessages.slice(0, -1),
-                { type: "bot", text: "Ocorreu um erro ao tentar classificar a notícia. Tente novamente mais tarde." },
-            ]);
+            await handleTypingEffect(<>Ocorreu um erro ao tentar classificar a notícia. Tente novamente mais tarde.</>);
         } finally {
             console.log(messages)
             setIsLoading(false);
