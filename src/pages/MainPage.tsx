@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Chat from "./../components/chat/Chat";
 import { MessageBot, Message } from "./../components/message/message";
@@ -16,6 +16,12 @@ const MainPage: React.FC = () => {
     const [text, setText] = useState<string>("");
     const [messages, setMessages] = useState<MessageType[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     useEffect(() => {
         const initialMessages: MessageType[] = [
@@ -36,6 +42,10 @@ const MainPage: React.FC = () => {
 
         setMessages(initialMessages); 
     }, []);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
     const handleTypingEffect = async (fullMessage: JSX.Element | string) => {
         const addMessagePart = (partialText: JSX.Element | string) => {
@@ -119,7 +129,7 @@ const MainPage: React.FC = () => {
             const prediction = response.data.result;
 
             const message: JSX.Element =
-                prediction === 1 ? (
+                prediction === 0 ? (
                     <>
                         A notícia enviada foi identificada como falsa pelo nosso modelo. No entanto, isso não significa que
                         ela de fato é falsa. Sempre verifique suas informações em agências de checagem de fatos confiáveis, como {" "}
@@ -184,6 +194,7 @@ const MainPage: React.FC = () => {
                         <Message key={index} text={message.text} />
                     );
                 })}
+                <div ref={messagesEndRef} />
                 <Bottom handleSubmit={handleSubmit} isLoading={isLoading} />
             </Chat>
         </div>
