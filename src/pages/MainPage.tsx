@@ -5,7 +5,6 @@ import { MessageBot, Message } from "./../components/message/message";
 import { Bottom } from "./../components/bottom/bottom";
 import "./../components/chat/Chat.css";
 import "./../App.css";
-import { Link } from "react-router-dom";
 
 interface MessageType {
     type: "bot" | "user";
@@ -45,6 +44,7 @@ const MainPage: React.FC = () => {
     }, [messages]);
 
     const handleSaibaMais = () => {
+        // @ts-ignore comment 
         document.getElementsByClassName("saiba-mais")[0].style.color = 'purple';
         const saibaMaisMessages: MessageType[] = [
             {
@@ -196,6 +196,7 @@ const MainPage: React.FC = () => {
             await handleTypingEffect(message);
         } catch (err) {
             console.error("Erro no React:", err);
+            console.error("Message State:", text);
             await handleTypingEffect(<>Ocorreu um erro ao tentar classificar a notícia. Tente novamente mais tarde.</>);
         } finally {
             setIsLoading(false);
