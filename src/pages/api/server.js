@@ -13,7 +13,7 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
-const API_URL = "https://chat-project-iota-smoky.vercel.app";
+const API_URL = "https://chat-project-iota-smoky.vercel.app/api/predict";
 
 app.post("/api/classify", async (req, res) => {
     try {
