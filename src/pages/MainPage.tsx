@@ -124,9 +124,6 @@ const MainPage: React.FC = () => {
                     );
                 }
             }
-            
-            console.log(displayedJSX)
-            
         }
     };
     
@@ -201,7 +198,6 @@ const MainPage: React.FC = () => {
             console.error("Erro no React:", err);
             await handleTypingEffect(<>Ocorreu um erro ao tentar classificar a notícia. Tente novamente mais tarde.</>);
         } finally {
-            console.log(messages)
             setIsLoading(false);
         }
     };
