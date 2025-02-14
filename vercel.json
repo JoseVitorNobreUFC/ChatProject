@@ -6,6 +6,10 @@
       "use": "@vercel/python"
     },
     {
+      "src": "api/server.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": { "distDir": "dist" }
@@ -13,8 +17,12 @@
   ],
   "routes": [
     {
+      "src": "/api/classify",
+      "dest": "/api/server.js"
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "api/main.py"
+      "dest": "/api/main.py"
     },
     {
       "src": "/assets/(.*)",
