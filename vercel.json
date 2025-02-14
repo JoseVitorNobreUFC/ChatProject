@@ -9,9 +9,6 @@
       "use": "@vercel/python"
     }
   ],
-  "redirects": [
-    { "source": "/", "destination": "/main.py" }
-  ],
   "routes": [
     {
       "src": "/api/(.*)",
