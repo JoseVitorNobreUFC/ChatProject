@@ -4,10 +4,10 @@ function Chat ({...props}) {
     <div className="chat">
       <div className="top">
         <div className="user">
-          <img src="./iconBot-teste.png"></img>
+          <img src="./AVATAR-FACEBOOK.png"></img>
           <div className="name">
-            <span>SinceroBot</span>
-            <p>Bot oriundo do trabalho de conclusão de curso, com o objetivo de ajudar na detecção de notícias falsas</p>
+            <span>ZéMentira</span>
+            <p>O ZéMentira vai te ajudar a encontrar a verdade!</p>
           </div>
         </div>
       </div>

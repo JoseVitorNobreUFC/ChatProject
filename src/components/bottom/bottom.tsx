@@ -1,39 +1,49 @@
-import { useState } from 'react';
+import React, { useState } from "react";
 
-export function Bottom({ handleSubmit }) {
-    const [text, setText] = useState("");
+interface BottomProps {
+    handleSubmit: (e: React.FormEvent, text: string) => void;
+    isLoading: boolean;
+}
+
+export const Bottom: React.FC<BottomProps> = ({ handleSubmit, isLoading }) => {
+    const [text, setText] = useState<string>("");
+
     return (
         <div className="bottom">
-            <div>
-                
-                <form onSubmit={(e) => {
-                    handleSubmit(e, text)
-                    setText('');
-                }}
-                className='form-container'>
-                    <label>
-                        Insira a notícia:
-                        <textarea id="text" name="text" 
-                            value={text}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) {
-                                    handleSubmit(e, text)
-                                    setText('');
-                                }
-                            }}
-                            onChange={(e) => setText(e.target.value)}
-                            />      
-                    </label>
+            <div className="form-container">
+                <form
+                    onSubmit={(e) => {
+                        handleSubmit(e, text);
+                        setText("");
+                    }}
+                >
+                    <label>Escreva a notícia aqui:</label>
+                    <textarea
+                        placeholder="Digite aqui a notícia pra gente verificar pra você!"
+                        id="text"
+                        name="text"
+                        value={text}
+                        disabled={isLoading}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSubmit(e, text);
+                                setText("");
+                            }
+                        }}
+                        className="chatInput"
+                        onChange={(e) => setText(e.target.value)}
+                    />
                     <br />
-                    {
-                    
-                    //<div className="icons">
-                    //    <img src="./upload.png" alt="" />
-                    //</div>
-                }
-                    <button type='submit'className='sendButton'>Enviar</button>
+                    <button type="submit" className="sendButton" disabled={isLoading}
+                        style={{
+                            backgroundColor: isLoading ? "#cccccc" : "#5183fe",
+                            cursor: isLoading ? "not-allowed" : "pointer",
+                        }} >
+                        {isLoading ? "Carregando..." : "Enviar"}
+                    </button>
                 </form>
             </div>
-    </div>
-    )
-}
+        </div>
+    );
+};
