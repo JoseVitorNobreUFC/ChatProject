@@ -3,12 +3,18 @@
     {
       "src": "api/main.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "vite.config.ts",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
       "dest": "api/main.py"
-    }
+    },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
