@@ -144,7 +144,7 @@ const MainPage: React.FC = () => {
         setMessages((prevMessages) => [...prevMessages, loadingMessage]);
 
         try {
-            const response = await axios.post("http://localhost:3001/classify", { text: texto });
+            const response = await axios.post("https://chat-project-iota-smoky.vercel.app/api/classify", { text: texto });
             const prediction = response.data.result;
 
             const message: JSX.Element =
