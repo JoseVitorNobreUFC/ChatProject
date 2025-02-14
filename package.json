@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite dev",
-    "prebuild": "pip install -U -r requirements.txt",
+    "prebuild": "pip install -r requirements.txt",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "api-preview": "uvicorn api.main:app --reload",
@@ -21,7 +21,6 @@
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "pip": "^0.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.3"
