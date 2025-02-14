@@ -1,21 +1,20 @@
-export function MessageBot({ text }: { text: string | JSX.Element }) {
+
+
+export function MessageBot({...props}) {
     return (
-      <div className="message">
-        <img src="./iconBot.png" alt="Bot Icon" />
+    <div className="message">
+        <img src="./iconBot-teste.png" alt="" />
         <div className="texts">
-          <p>{text}</p>
+            <p>{props.text}</p>
         </div>
-      </div>
-    );
-  }
-  
-  export function Message({ text }: { text: string | JSX.Element }) {
+    </div>)
+}
+
+export function Message({...props}) {
     return (
-      <div className="message own">
+    <div className="message own">
         <div className="texts">
-          <p>{text}</p>
+            <p>{props.text}</p>
         </div>
-      </div>
-    );
-  }
-  
+    </div>)
+}

@@ -3,7 +3,6 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  width: 100%;
 
   .top {
     display: flex;
@@ -18,8 +17,8 @@
       gap: 20px;
 
       img {
-        width: 80px;
-        height: 80px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
         object-fit: cover;
       }
@@ -43,7 +42,6 @@
 
   .body {
     padding: 20px;
-    padding-bottom: 100px;
     flex: 1;
     overflow: scroll;
     display: flex;
@@ -52,27 +50,27 @@
     overflow-x: hidden;
 
     .message {
-      max-width: 70%; /* Limita a largura máxima para manter a mensagem legível */
+      max-width: 70%;
       display: flex;
       gap: 20px;
-      
+
       &.own {
         align-self: flex-end;
-    
+
         .texts {
           p {
             background-color: #5183fe;
           }
         }
       }
-    
+
       img {
         width: 30px;
         height: 30px;
         border-radius: 50%;
         object-fit: cover;
       }
-    
+
       .texts {
         flex: 1;
         display: flex;
@@ -80,45 +78,31 @@
         gap: 5px;
 
         p {
-          width: fit-content;
-          padding: 12px 16px; 
+          padding: 20px;
           background-color: rgba(17, 25, 40, 0.3);
           border-radius: 10px;
-    
-          display: inline-block;
-          max-width: 100%; 
-          word-wrap: break-word; 
-          white-space: pre-wrap; 
-          box-sizing: border-box; 
-    
+
           &.prediction {
             background: transparent;
             padding: 0px;
           }
         }
-    
+
         span {
           font-size: 13px;
           padding-left: 1%;
         }
       }
     }
-    
   }
 
   .bottom {
-    padding: 10px 20px 20px 20px;
+    padding: 20px;
     display: flex;
+    width: 100%;
     gap: 20px;
     margin-top: auto;
     border-top: 1px solid #dddddd35;
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 1000;
-    background-color: rgb(240, 231, 231);
-    border-radius: 10px;
 
     .icons {
       display: flex;
@@ -131,12 +115,24 @@
       }
     }
 
-    .form-container {
+    textarea {
+      flex: 1;
+      background-color: rgba(17, 25, 40, 0.5);
+      border: none;
+      outline: none;
+      color: white;
+      border-radius: 10px;
+      font-size: 16px;
+      padding: 10px 20px;
       width: 100%;
+    }
+
+    .form-container {
       display: flex;
       align-items: center;
       gap: 10px;
-      flex: 1;
+      /* Espaço entre a caixa de texto e o botão */
+      width: 100%;
     }
 
     .form-container label {
@@ -148,33 +144,36 @@
     .form-container form {
       display: flex;
       align-items: center;
-      gap: 10px;
-      flex: 1;
       width: 100%;
+      gap: 10px;
     }
 
-    .form-container .chatInput {
+    .form-container textarea {
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 5px;
       flex: 1;
+      /* Faz o input crescer para ocupar o espaço disponível */
       color: black;
       background-color: #ada9ae;
-      height: 100%;
-      width: 100%;
-      resize: vertical;
+      width: 150vh;
+      height: 50px;
     }
 
     .form-container .sendButton {
       background-color: #5183fe;
       color: black;
-      padding: 15px 20px;
+      padding: 10px 20px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
       white-space: nowrap;
+      /* o texto do botão não quebre */
     }
 
   }
 
+  .ze-mentira {
+    object-fit: cover;
+  }
 }
