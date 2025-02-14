@@ -4,9 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "homepage": "https://chat-project-iota-smoky.vercel.app/",
-  "engines": {
-    "node": "22.x"
-  },
   "scripts": {
     "dev": "vite dev",
     "prebuild": "pip install -r requirements.txt",
