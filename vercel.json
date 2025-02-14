@@ -18,7 +18,7 @@
   "routes": [
     {
       "src": "/api/classify",
-      "dest": "server.js"
+      "dest": "/api/server.js"
     },
     {
       "src": "/api/(.*)",
